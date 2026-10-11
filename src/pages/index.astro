@@ -5,6 +5,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
@@ -169,6 +170,11 @@ const posts = (await getCollection('blog')).sort(
 					<span class="cat-chip">🚇 交通・両替・SIM</span>
 				</div>
 			</div>
+
+			<NewsletterSubscribe
+				title="渡韓前に知っておきたい！現地速報メルマガ 💌"
+				description="オリーブヤングのセール情報・おすすめ韓国コスメ・リアルな両替レートやカフェ情報を週1回無料でお届けします。"
+			/>
 
 			<h2 class="section-heading">最新記事一覧 (Latest Notes)</h2>
 			<section>

@@ -1,0 +1,280 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+	compact?: boolean;
+}
+
+const {
+	title = '最新の渡韓速報・現地トレンドを無料でお届け 💌',
+	description = 'ソウル在住エディターが厳選！オリーブヤング最新セール、現地レート、話題のカフェ＆美容情報を週1回配信中。いつでもワンクリックで解除できます。',
+	compact = false,
+} = Astro.props;
+---
+
+<div class={`newsletter-box ${compact ? 'compact' : ''}`}>
+	<div class="newsletter-badge">SEOUL TRIP NOTE NEWSLETTER</div>
+	<h3 class="newsletter-title">{title}</h3>
+	<p class="newsletter-desc">{description}</p>
+
+	<form class="newsletter-form" id="newsletter-form">
+		<div class="input-group">
+			<input
+				type="email"
+				name="email"
+				id="newsletter-email"
+				placeholder="メールアドレスを入力 (例: seoul@example.com)"
+				required
+				autocomplete="email"
+			/>
+			<button type="submit" id="newsletter-submit-btn">
+				<span class="btn-text">無料登録する</span>
+				<span class="btn-spinner" aria-hidden="true"></span>
+			</button>
+		</div>
+		<div class="form-message" id="newsletter-message" role="alert" aria-live="polite"></div>
+		<p class="privacy-note">🔒 スパムは一切送信しません。安心の公式配信（解除はいつでも可能）</p>
+	</form>
+</div>
+
+<script>
+	function setupNewsletter() {
+		const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
+		if (!form || form.dataset.bound === 'true') return;
+		form.dataset.bound = 'true';
+
+		const emailInput = document.getElementById('newsletter-email') as HTMLInputElement | null;
+		const submitBtn = document.getElementById('newsletter-submit-btn') as HTMLButtonElement | null;
+		const messageBox = document.getElementById('newsletter-message') as HTMLElement | null;
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			if (!emailInput || !submitBtn || !messageBox) return;
+
+			const email = emailInput.value.trim();
+			if (!email) return;
+
+			submitBtn.disabled = true;
+			submitBtn.classList.add('loading');
+			messageBox.className = 'form-message';
+			messageBox.textContent = '';
+
+			try {
+				const res = await fetch('/api/subscribe', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email }),
+				});
+
+				const data = await res.json().catch(() => ({}));
+
+				if (res.ok && data.success) {
+					messageBox.className = 'form-message success';
+					messageBox.innerHTML = `🎉 <strong>ご登録ありがとうございます！</strong><br />${data.message || '最新のソウル旅行・コスメ情報をお届けします。'}`;
+					emailInput.value = '';
+					form.classList.add('submitted');
+				} else {
+					messageBox.className = 'form-message error';
+					messageBox.textContent = data.error || '登録中にエラーが発生しました。もう一度お試しください。';
+				}
+			} catch (err) {
+				messageBox.className = 'form-message error';
+				messageBox.textContent = '通信エラーが発生しました。電波の良い場所で再度お試しください。';
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.classList.remove('loading');
+			}
+		});
+	}
+
+	// Setup on page load
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', setupNewsletter);
+	} else {
+		setupNewsletter();
+	}
+</script>
+
+<style>
+	.newsletter-box {
+		background: linear-gradient(135deg, #fff5f8 0%, #fdf8f4 50%, #f0f7ff 100%);
+		border: 1px solid #ffd8e4;
+		border-radius: 16px;
+		padding: 2.2rem 1.8rem;
+		margin: 2.5rem 0;
+		text-align: center;
+		box-shadow: 0 4px 16px rgba(255, 75, 114, 0.06);
+	}
+
+	.newsletter-box.compact {
+		padding: 1.5rem 1.2rem;
+		margin: 1.8rem 0;
+	}
+
+	.newsletter-badge {
+		display: inline-block;
+		background: #ff4b72;
+		color: #ffffff;
+		font-size: 0.72rem;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		padding: 0.25rem 0.75rem;
+		border-radius: 999px;
+		margin-bottom: 0.8rem;
+	}
+
+	.newsletter-title {
+		font-size: 1.45rem;
+		color: #1e293b;
+		margin: 0 0 0.6rem 0;
+		font-weight: 800;
+		line-height: 1.35;
+	}
+
+	.newsletter-desc {
+		font-size: 0.92rem;
+		color: #475569;
+		line-height: 1.6;
+		max-width: 580px;
+		margin: 0 auto 1.5rem auto;
+	}
+
+	.newsletter-form {
+		max-width: 520px;
+		margin: 0 auto;
+	}
+
+	.input-group {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.input-group input {
+		flex: 1;
+		padding: 0.85rem 1.1rem;
+		font-size: 0.95rem;
+		border: 1.5px solid #e2e8f0;
+		border-radius: 10px;
+		background: #ffffff;
+		color: #1e293b;
+		outline: none;
+		transition: border-color 0.2s, box-shadow 0.2s;
+	}
+
+	.input-group input:focus {
+		border-color: #ff4b72;
+		box-shadow: 0 0 0 3px rgba(255, 75, 114, 0.15);
+	}
+
+	.input-group button {
+		background: #ff4b72;
+		color: #ffffff;
+		font-weight: 700;
+		font-size: 0.95rem;
+		padding: 0 1.4rem;
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		white-space: nowrap;
+		transition: all 0.2s ease;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 4px 12px rgba(255, 75, 114, 0.25);
+	}
+
+	.input-group button:hover {
+		background: #e63960;
+		transform: translateY(-1px);
+		box-shadow: 0 6px 16px rgba(255, 75, 114, 0.32);
+	}
+
+	.input-group button:active {
+		transform: translateY(0);
+	}
+
+	.input-group button:disabled {
+		opacity: 0.7;
+		cursor: not-allowed;
+		transform: none;
+	}
+
+	.btn-spinner {
+		display: none;
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid #ffffff;
+		border-top-color: transparent;
+		border-radius: 50%;
+		animation: spin 0.8s linear infinite;
+	}
+
+	.input-group button.loading .btn-text {
+		display: none;
+	}
+
+	.input-group button.loading .btn-spinner {
+		display: inline-block;
+	}
+
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	.form-message {
+		margin-top: 1rem;
+		font-size: 0.9rem;
+		line-height: 1.5;
+		display: none;
+	}
+
+	.form-message.success {
+		display: block;
+		background: #ecfdf5;
+		color: #065f46;
+		border: 1px solid #a7f3d0;
+		border-radius: 8px;
+		padding: 0.8rem 1rem;
+	}
+
+	.form-message.error {
+		display: block;
+		background: #fef2f2;
+		color: #991b1b;
+		border: 1px solid #fecaca;
+		border-radius: 8px;
+		padding: 0.7rem 1rem;
+	}
+
+	.privacy-note {
+		margin-top: 0.75rem;
+		font-size: 0.78rem;
+		color: #64748b;
+	}
+
+	@media (max-width: 600px) {
+		.newsletter-box {
+			padding: 1.8rem 1.2rem;
+		}
+
+		.newsletter-title {
+			font-size: 1.25rem;
+		}
+
+		.newsletter-desc {
+			font-size: 0.88rem;
+		}
+
+		.input-group {
+			flex-direction: column;
+		}
+
+		.input-group button {
+			padding: 0.85rem;
+		}
+	}
+</style>
