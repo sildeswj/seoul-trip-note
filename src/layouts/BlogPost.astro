@@ -31,7 +31,7 @@ const jsonLd = {
 	dateModified: (updatedDate ?? pubDate).toISOString(),
 	inLanguage: 'ja',
 	mainEntityOfPage: url,
-	author: { '@type': 'Organization', name: 'SEOUL TRIP NOTE 編集部', url: 'https://seoul.jworld.dev/about/' },
+	author: { '@type': 'Person', name: 'J', jobTitle: 'SEOUL TRIP NOTE 運営者', homeLocation: 'Seoul, Korea', url: 'https://seoul.jworld.dev/about/' },
 	publisher: { '@type': 'Organization', name: 'JWorld', url: 'https://jworld.dev' },
 };
 ---
@@ -48,7 +48,7 @@ const jsonLd = {
 				<div class="byline">
 					<span class="meta">
 						{fmtDate(pubDate)}
-						{updatedDate && <> · 更新 {fmtDate(updatedDate)}</>} · {readingMinutes(post)}分で読める · SEOUL TRIP NOTE 編集部
+						{updatedDate && <> · 更新 {fmtDate(updatedDate)}</>} · {readingMinutes(post)}分で読める · 文・J（ソウル在住）
 					</span>
 				</div>
 			</header>
