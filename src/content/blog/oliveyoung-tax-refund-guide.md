@@ -2,7 +2,9 @@
 title: "オリーブヤングの免税（タックスリファンド）完全ガイド【即時還付vs空港還付】"
 description: "オリーブヤングで使える韓国の免税（タックスリファンド）について、即時還付と空港還付の違い、必要書類、手続きの流れを公式案内や公開情報をもとにSEOUL TRIP NOTE編集部が整理しました。金額条件は執筆時点の目安なので、最新情報は店舗・空港でご確認ください。"
 pubDate: "2026-10-12"
-heroImage: "../../assets/blog-placeholder-3.jpg"
+heroImage: "../../assets/blog/oliveyoung-tax-refund-guide.jpg"
+heroAlt: "オリーブヤングの免税（タックスリファンド）完全ガイド【即時還付vs空港還付】"
+heroAi: true
 ---
 
 この記事は、SEOUL TRIP NOTE 編集部が韓国の免税制度に関する公式案内や公開情報をもとにまとめたものです。

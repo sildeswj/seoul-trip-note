@@ -2,7 +2,9 @@
 title: "韓国ダイソー『VTリードルショット』は効果ある？口コミと製品情報から編集部が検証"
 description: "韓国ダイソーで話題のVTリードルショットについて、公開されている製品情報と口コミの傾向をSEOUL TRIP NOTE編集部がまとめました。オリーブヤング版との違い、価格の目安、購入のコツまで解説します。毛穴ケアが気になる方へ。"
 pubDate: "2026-10-12"
-heroImage: "../../assets/blog-placeholder-2.jpg"
+heroImage: "../../assets/blog/daiso-reedle-shot-honest-review.jpg"
+heroAlt: "韓国ダイソー『VTリードルショット』は効果ある？口コミと製品情報から編集部が検証"
+heroAi: true
 ---
 
 アンニョンハセヨ！SEOUL TRIP NOTE 編集部です。この記事では、公開されている製品情報や口コミの傾向をもとに、渡韓前に知っておきたいポイントをまとめています。

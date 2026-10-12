@@ -2,7 +2,9 @@
 title: "赤み・ニキビ肌向け｜韓国オリーブヤングで人気のトナーパッド4種を口コミと成分で比較"
 description: "オリーブヤングで人気の赤み・ニキビ肌向けトナーパッド4種を、SEOUL TRIP NOTE 編集部が公式情報と口コミの傾向をもとに比較。シカ、ティーツリー、ドクダミなど鎮静系成分の特徴や価格の目安、セール・即時還付などお得な買い方もまとめました。"
 pubDate: "2026-10-12"
-heroImage: "../../assets/blog-placeholder-4.jpg"
+heroImage: "../../assets/blog/korea-cica-toner-pad-comparison.jpg"
+heroAlt: "赤み・ニキビ肌向け｜韓国オリーブヤングで人気のトナーパッド4種を口コミと成分で比較"
+heroAi: true
 ---
 
 この記事は、SEOUL TRIP NOTE 編集部が各ブランドの公式情報と、オンライン上の口コミの傾向をもとにまとめたものです。

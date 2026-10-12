@@ -2,7 +2,9 @@
 title: "【2026年版】オリヤンセールはいつ？過去の開催時期から予想する時期と賢いお買い物術"
 description: "2026年のオリーブヤング（オリヤン）ビッグセール時期を過去の開催時期から予想。渡韓計画に役立つセールの傾向、人気コスメ、即時還付などお得な買い方を編集部がまとめました。最新の日程は公式アプリでご確認ください。"
 pubDate: "2026-10-12"
-heroImage: "../../assets/blog-placeholder-5.jpg"
+heroImage: "../../assets/blog/oliveyoung-big-sale-dates-2026.jpg"
+heroAlt: "【2026年版】オリヤンセールはいつ？過去の開催時期から予想する時期と賢いお買い物術"
+heroAi: true
 ---
 
 こんにちは、SEOUL TRIP NOTE 編集部です。

@@ -2,7 +2,9 @@
 title: "2026年版 オリーブヤングのスキンケア7選｜成分と口コミで選ぶ【免税の手順付き】"
 description: "2026年版、オリーブヤングで人気の韓国スキンケアアイテム7選をSEOUL TRIP NOTE編集部がまとめました。公式情報をもとにした成分比較や価格帯の目安、肌悩み別の選び方、免税手続きの流れまで、渡韓準備に役立つ情報を紹介します。"
 pubDate: "2026-10-11"
-heroImage: "../../assets/blog-placeholder-1.jpg"
+heroImage: "../../assets/blog/oliveyoung-skincare-best-2026.jpg"
+heroAlt: "2026年版 オリーブヤングのスキンケア7選｜成分と口コミで選ぶ【免税の手順付き】"
+heroAi: true
 ---
 
 こんにちは、SEOUL TRIP NOTE 編集部です。
