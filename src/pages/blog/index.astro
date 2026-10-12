@@ -1,114 +1,77 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import NewsletterSubscribe from '../../components/NewsletterSubscribe.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import PostCard from '../../components/PostCard.astro';
+import Base from '../../layouts/Base.astro';
+import { CATEGORIES, getPosts } from '../../lib/posts';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getPosts();
 ---
 
-<!doctype html>
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</a>
-						</li>
-					))}
-				</ul>
-			</section>
-			<NewsletterSubscribe />
-		</main>
-		<Footer />
-	</body>
-</html>
+<Base title="記事一覧 | SEOUL TRIP NOTE" description="SEOUL TRIP NOTE のすべての記事。韓国コスメ、オリーブヤング、免税、ソウル旅行の実用情報。">
+	<main class="wrap">
+		<header class="lh">
+			<p class="eyebrow">All Articles</p>
+			<h1>記事一覧</h1>
+			<div class="chips">
+				<a href="/blog/" class="on">すべて <span>{posts.length}</span></a>
+				{CATEGORIES.map((c) => <a href={`/category/${c.slug}/`}>{c.label}</a>)}
+			</div>
+		</header>
+		<div class="grid">
+			{posts.map((p) => <PostCard post={p} />)}
+		</div>
+	</main>
+</Base>
+
+<style>
+	.lh {
+		padding: 56px 0 36px;
+		border-bottom: 1px solid var(--line);
+		margin-bottom: 44px;
+	}
+	.lh h1 {
+		margin-top: 10px;
+		font-size: clamp(28px, 4vw, 40px);
+	}
+	.chips {
+		margin-top: 22px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.chips a {
+		font-size: 13px;
+		padding: 7px 14px;
+		border-radius: 999px;
+		border: 1px solid var(--line);
+		background: var(--surface);
+		color: var(--ink-2);
+	}
+	.chips a:hover {
+		border-color: var(--ink);
+		color: var(--ink);
+	}
+	.chips a.on {
+		background: var(--ink);
+		border-color: var(--ink);
+		color: #fff;
+	}
+	.chips span {
+		opacity: 0.7;
+		margin-left: 4px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 44px 32px;
+	}
+	@media (max-width: 960px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

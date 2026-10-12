@@ -1,0 +1,96 @@
+---
+import PostCard from '../../components/PostCard.astro';
+import Base from '../../layouts/Base.astro';
+import { CATEGORIES, categoryOf, getPosts, type Category } from '../../lib/posts';
+
+export function getStaticPaths() {
+	return CATEGORIES.map((c) => ({ params: { slug: c.slug }, props: { cat: c } }));
+}
+const { cat } = Astro.props as { cat: Category };
+const posts = (await getPosts()).filter((p) => categoryOf(p).slug === cat.slug);
+---
+
+<Base title={`${cat.label}の記事 | SEOUL TRIP NOTE`} description={`${cat.label}に関するSEOUL TRIP NOTEの記事一覧。`}>
+	<main>
+		<header class="band" style={`--tone:${cat.tone};--cink:${cat.ink}`}>
+			<div class="wrap">
+				<p class="en">{cat.en}</p>
+				<h1>{cat.label}</h1>
+				<p class="n">{posts.length}本の記事</p>
+			</div>
+		</header>
+		<div class="wrap">
+			<div class="chips">
+				<a href="/blog/">すべて</a>
+				{CATEGORIES.map((c) => <a href={`/category/${c.slug}/`} class:list={{ on: c.slug === cat.slug }}>{c.label}</a>)}
+			</div>
+			{posts.length ? (
+				<div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+			) : (
+				<p class="empty">このカテゴリの記事は準備中です。近日公開予定です。</p>
+			)}
+		</div>
+	</main>
+</Base>
+
+<style>
+	.band {
+		background: var(--tone);
+		color: var(--cink);
+		padding: 56px 0 44px;
+	}
+	.en {
+		margin: 0;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.24em;
+	}
+	.band h1 {
+		color: var(--cink);
+		margin-top: 8px;
+		font-size: clamp(28px, 4vw, 40px);
+	}
+	.n {
+		margin: 8px 0 0;
+		font-size: 13px;
+		opacity: 0.8;
+	}
+	.chips {
+		margin: 28px 0 40px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.chips a {
+		font-size: 13px;
+		padding: 7px 14px;
+		border-radius: 999px;
+		border: 1px solid var(--line);
+		background: var(--surface);
+		color: var(--ink-2);
+	}
+	.chips a.on {
+		background: var(--ink);
+		border-color: var(--ink);
+		color: #fff;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 44px 32px;
+	}
+	.empty {
+		padding: 40px 0;
+		color: var(--ink-3);
+	}
+	@media (max-width: 960px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

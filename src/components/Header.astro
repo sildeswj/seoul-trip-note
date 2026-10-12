@@ -1,88 +1,132 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import { CATEGORIES } from '../lib/posts';
+const path = Astro.url.pathname;
+const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header>
-	<nav>
-		<h2>
-			<a href="/" class="brand-link">🌸 SEOUL TRIP NOTE</a>
-		</h2>
-		<div class="internal-links">
-			<HeaderLink href="/">ホーム</HeaderLink>
-			<HeaderLink href="/blog">記事一覧</HeaderLink>
-			<HeaderLink href="/about">メディア紹介</HeaderLink>
-			<HeaderLink href="/privacy">ポリシー</HeaderLink>
-		</div>
-		<div class="nav-extra">
-			<a href="https://jworld.dev" target="_blank" rel="noopener" class="studio-link">JWorld Studio ↗</a>
+<header class="site-header">
+	<div class="wrap top">
+		<a href="/" class="brand" aria-label="SEOUL TRIP NOTE ホーム">
+			<span class="mark">SEOUL TRIP NOTE</span>
+			<span class="tag">ソウル旅と韓国コスメの実用ノート</span>
+		</a>
+		<nav class="util" aria-label="サイト">
+			<a href="/blog/" class:list={{ on: active('/blog') }}>記事一覧</a>
+			<a href="/about/" class:list={{ on: active('/about') }}>About</a>
+			<a href="#newsletter" class="sub">ニュースレター</a>
+		</nav>
+	</div>
+	<nav class="cats" aria-label="カテゴリ">
+		<div class="wrap cats-in">
+			<a href="/" class:list={{ on: active('/') }}>ホーム</a>
+			{CATEGORIES.map((c) => <a href={`/category/${c.slug}/`} class:list={{ on: active(`/category/${c.slug}`) }}>{c.label}</a>)}
 		</div>
 	</nav>
 </header>
+
 <style>
-	header {
-		margin: 0;
-		padding: 0 1.2em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	.site-header {
+		background: var(--paper);
+		border-bottom: 1px solid var(--line);
 		position: sticky;
 		top: 0;
 		z-index: 50;
+		backdrop-filter: saturate(1.2) blur(8px);
+		background: rgba(251, 249, 246, 0.92);
 	}
-	h2 {
-		margin: 0;
-		font-size: 1.1em;
-	}
-	.brand-link {
-		color: #ff4b72;
-		font-weight: 800;
-		letter-spacing: -0.02em;
-		text-decoration: none;
-	}
-	nav {
+	.top {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		max-width: 960px;
-		margin: 0 auto;
+		gap: 16px;
+		padding: 18px 0 12px;
 	}
-	.internal-links {
+	.brand {
 		display: flex;
-		gap: 0.2em;
+		flex-direction: column;
+		line-height: 1.2;
 	}
-	nav a {
-		padding: 1em 0.6em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
-		text-decoration: none;
-		font-size: 0.95rem;
+	.mark {
+		font-family: var(--serif);
+		font-weight: 700;
+		font-size: 24px;
+		letter-spacing: 0.14em;
+		color: var(--ink);
+	}
+	.tag {
+		margin-top: 4px;
+		font-size: 11px;
+		letter-spacing: 0.12em;
+		color: var(--ink-3);
+	}
+	.util {
+		display: flex;
+		align-items: center;
+		gap: 22px;
+		font-size: 13px;
+		color: var(--ink-2);
+	}
+	.util a:hover,
+	.util a.on {
+		color: var(--accent);
+	}
+	.util .sub {
+		padding: 7px 14px;
+		border: 1px solid var(--ink);
+		border-radius: 999px;
+		color: var(--ink);
 		font-weight: 500;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: #ff4b72;
-		color: #ff4b72;
+	.util .sub:hover {
+		background: var(--ink);
+		color: #fff;
+	}
+	.cats {
+		border-top: 1px solid var(--line-2);
+	}
+	.cats-in {
+		display: flex;
+		gap: 26px;
+		overflow-x: auto;
+		scrollbar-width: none;
+		font-size: 13px;
+		color: var(--ink-2);
+	}
+	.cats-in::-webkit-scrollbar {
+		display: none;
+	}
+	.cats a {
+		padding: 11px 0;
+		white-space: nowrap;
+		border-bottom: 2px solid transparent;
+	}
+	.cats a:hover {
+		color: var(--ink);
+	}
+	.cats a.on {
+		color: var(--ink);
 		font-weight: 700;
-	}
-	.studio-link {
-		font-size: 0.85rem;
-		color: #666;
-		padding: 0.4em 0.8em;
-		border: 1px solid #e0e0e0;
-		border-radius: 6px;
-		text-decoration: none;
-		transition: all 0.2s;
-	}
-	.studio-link:hover {
-		border-color: #ff4b72;
-		color: #ff4b72;
+		border-bottom-color: var(--accent);
 	}
 	@media (max-width: 720px) {
-		.studio-link {
+		.top {
+			padding: 14px 0 10px;
+		}
+		.mark {
+			font-size: 18px;
+		}
+		.tag {
+			font-size: 10px;
+		}
+		.util a:not(.sub) {
 			display: none;
 		}
-		nav a {
-			padding: 0.8em 0.4em;
-			font-size: 0.85rem;
+		.util .sub {
+			font-size: 12px;
+			padding: 6px 12px;
+		}
+		.cats-in {
+			gap: 20px;
 		}
 	}
 </style>

@@ -3,33 +3,35 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
+import remarkCjkFriendly from 'remark-cjk-friendly';
+import rehypeEditorial from './src/lib/rehype-editorial.mjs';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://seoul.jworld.dev',
 	integrations: [mdx(), sitemap()],
+	markdown: {
+		remarkPlugins: [remarkCjkFriendly],
+		rehypePlugins: [rehypeEditorial],
+	},
 	fonts: [
 		{
-			provider: fontProviders.local(),
-			name: 'Atkinson',
-			cssVariable: '--font-atkinson',
-			fallbacks: ['sans-serif'],
-			options: {
-				variants: [
-					{
-						src: ['./src/assets/fonts/atkinson-regular.woff'],
-						weight: 400,
-						style: 'normal',
-						display: 'swap',
-					},
-					{
-						src: ['./src/assets/fonts/atkinson-bold.woff'],
-						weight: 700,
-						style: 'normal',
-						display: 'swap',
-					},
-				],
-			},
+			provider: fontProviders.google(),
+			name: 'Noto Sans JP',
+			cssVariable: '--font-sans',
+			weights: [400, 500, 700],
+			styles: ['normal'],
+			subsets: ['japanese', 'latin'],
+			fallbacks: ['Hiragino Sans', 'Yu Gothic', 'sans-serif'],
+		},
+		{
+			provider: fontProviders.google(),
+			name: 'Zen Old Mincho',
+			cssVariable: '--font-serif',
+			weights: [500, 700],
+			styles: ['normal'],
+			subsets: ['japanese', 'latin'],
+			fallbacks: ['Hiragino Mincho ProN', 'Yu Mincho', 'serif'],
 		},
 	],
 });

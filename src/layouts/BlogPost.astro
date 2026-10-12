@@ -1,86 +1,224 @@
 ---
-import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import type { MarkdownHeading } from 'astro';
+import AuthorBox from '../components/AuthorBox.astro';
+import Cover from '../components/Cover.astro';
 import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
+import PostCard from '../components/PostCard.astro';
+import Share from '../components/Share.astro';
+import Toc from '../components/Toc.astro';
+import { categoryOf, fmtDate, getPosts, isPlaceholder, readingMinutes, related, type Post } from '../lib/posts';
+import Base from './Base.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
-
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+interface Props {
+	post: Post;
+	headings: MarkdownHeading[];
+}
+const { post, headings } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage } = post.data;
+const cat = categoryOf(post);
+const all = await getPosts();
+const more = related(all, post, 3);
+const idx = all.findIndex((p) => p.id === post.id);
+const newer = idx > 0 ? all[idx - 1] : undefined;
+const older = idx < all.length - 1 ? all[idx + 1] : undefined;
+const url = new URL(Astro.url.pathname, Astro.site).toString();
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description,
+	datePublished: pubDate.toISOString(),
+	dateModified: (updatedDate ?? pubDate).toISOString(),
+	inLanguage: 'ja',
+	mainEntityOfPage: url,
+	author: { '@type': 'Organization', name: 'SEOUL TRIP NOTE 編集部', url: 'https://seoul.jworld.dev/about/' },
+	publisher: { '@type': 'Organization', name: 'JWorld', url: 'https://jworld.dev' },
+};
 ---
 
-<html lang="ja">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<Base title={`${title} | SEOUL TRIP NOTE`} description={description} image={heroImage} type="article" jsonLd={jsonLd}>
+	<main class="post">
+		<article>
+			<header class="head">
+				<nav class="crumbs" aria-label="パンくず">
+					<a href="/">ホーム</a><span>/</span><a href={`/category/${cat.slug}/`}>{cat.label}</a>
+				</nav>
+				<h1>{title}</h1>
+				<p class="lead">{description}</p>
+				<div class="byline">
+					<span class="meta">
+						{fmtDate(pubDate)}
+						{updatedDate && <> · 更新 {fmtDate(updatedDate)}</>} · {readingMinutes(post)}分で読める · SEOUL TRIP NOTE 編集部
+					</span>
+				</div>
+			</header>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
+			<div class="hero">
+				<Cover post={post} size={isPlaceholder(post) ? 'banner' : 'lg'} eager />
+			</div>
+
+			<div class="col">
+				<Toc headings={headings} />
 				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{updatedDate && (
-								<div class="last-updated-on">
-									Last updated on <FormattedDate date={updatedDate} />
-								</div>
-							)}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
 					<slot />
-					<NewsletterSubscribe />
 				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+
+				<div class="after">
+					<Share url={url} title={title} />
+					<AuthorBox />
+					<p class="note">※ 記事内の価格・割引率・日程は執筆時点の目安です。お出かけ前に各店舗・公式サイトの最新情報をご確認ください。</p>
+				</div>
+
+				<nav class="pager" aria-label="前後の記事">
+					{older ? <a href={`/blog/${older.id}/`} class="prev"><span class="meta">← 前の記事</span><span class="pt">{older.data.title}</span></a> : <span />}
+					{newer ? <a href={`/blog/${newer.id}/`} class="next"><span class="meta">次の記事 →</span><span class="pt">{newer.data.title}</span></a> : <span />}
+				</nav>
+			</div>
+		</article>
+
+		{
+			more.length > 0 && (
+				<section class="wrap rel">
+					<div class="section-head">
+						<h2>あわせて読みたい</h2>
+						<a href="/blog/" class="more">すべての記事 →</a>
+					</div>
+					<div class="rel-grid">
+						{more.map((p) => (
+							<PostCard post={p} />
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<div class="wrap nl">
+			<NewsletterSubscribe />
+		</div>
+	</main>
+</Base>
+
+<style>
+	.head,
+	.col {
+		width: min(var(--measure), calc(100% - 40px));
+		margin-inline: auto;
+	}
+	.head {
+		padding-top: 48px;
+		text-align: center;
+	}
+	.crumbs {
+		font-size: 12px;
+		color: var(--ink-3);
+		display: flex;
+		justify-content: center;
+		gap: 8px;
+		letter-spacing: 0.06em;
+	}
+	.crumbs a:hover {
+		color: var(--accent);
+	}
+	.crumbs a:last-child {
+		color: var(--accent);
+		font-weight: 700;
+	}
+	h1 {
+		margin-top: 18px;
+		font-size: clamp(25px, 3.6vw, 36px);
+		line-height: 1.5;
+	}
+	.lead {
+		margin: 16px auto 0;
+		max-width: 620px;
+		font-size: 14.5px;
+		line-height: 1.9;
+		color: var(--ink-2);
+	}
+	.byline {
+		margin-top: 18px;
+	}
+	.hero {
+		width: min(960px, calc(100% - 40px));
+		margin: 36px auto 40px;
+	}
+	.col > :global(.toc) {
+		margin-bottom: 36px;
+	}
+	.after {
+		margin-top: 56px;
+		display: grid;
+		gap: 22px;
+	}
+	.note {
+		margin: 0;
+		font-size: 12px;
+		color: var(--ink-3);
+		line-height: 1.8;
+	}
+	.pager {
+		margin-top: 40px;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+	.pager a {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 16px 18px;
+		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		background: var(--surface);
+	}
+	.pager .next {
+		text-align: right;
+	}
+	.pager a:hover {
+		border-color: var(--ink);
+	}
+	.pt {
+		font-size: 13.5px;
+		line-height: 1.6;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.rel-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 32px;
+	}
+	.nl {
+		margin-top: 64px;
+	}
+	@media (max-width: 860px) {
+		.rel-grid {
+			grid-template-columns: 1fr;
+			gap: 28px;
+		}
+	}
+	@media (max-width: 600px) {
+		.head {
+			text-align: left;
+			padding-top: 28px;
+		}
+		.crumbs {
+			justify-content: flex-start;
+		}
+		.lead {
+			margin-left: 0;
+		}
+		.hero {
+			width: 100%;
+			margin: 24px 0 28px;
+		}
+		.hero :global(.cover) {
+			border-radius: 0;
+		}
+		.pager {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,111 @@
+---
+// 記事の表紙。実写画像があればそれを、なければカテゴリ色のタイポグラフィ表紙を描く。
+import { Image } from 'astro:assets';
+import { categoryOf, isPlaceholder, shortTitle, type Post } from '../lib/posts';
+
+interface Props {
+	post: Post;
+	size?: 'lg' | 'md' | 'sm' | 'banner';
+	eager?: boolean;
+}
+const { post, size = 'md', eager = false } = Astro.props;
+const cat = categoryOf(post);
+const useImage = !isPlaceholder(post) && post.data.heroImage;
+const title = shortTitle(post.data.title);
+---
+
+<div class={`cover ${size}`} style={`--tone:${cat.tone};--cink:${cat.ink}`}>
+	{
+		useImage ? (
+			<Image src={post.data.heroImage!} alt="" width={size === 'lg' || size === 'banner' ? 1200 : 720} height={size === 'lg' || size === 'banner' ? 675 : 405} loading={eager ? 'eager' : 'lazy'} />
+		) : (
+			<div class="type" aria-hidden="true">
+				<span class="en">{cat.en}</span>
+				<span class="t">{title}</span>
+				<span class="foot">SEOUL TRIP NOTE</span>
+			</div>
+		)
+	}
+</div>
+
+<style>
+	.cover {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: var(--tone);
+	}
+	.cover :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.type {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 7% 8%;
+		color: var(--cink);
+		background:
+			radial-gradient(circle at 88% 12%, rgba(255, 255, 255, 0.55) 0 18%, transparent 19%),
+			radial-gradient(circle at 92% 18%, transparent 0 26%, rgba(255, 255, 255, 0.25) 26.5% 27.5%, transparent 28%),
+			var(--tone);
+	}
+	.en {
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.24em;
+	}
+	.t {
+		font-family: var(--serif);
+		font-weight: 700;
+		line-height: 1.5;
+		letter-spacing: 0.04em;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		max-width: 88%;
+	}
+	.foot {
+		font-family: var(--serif);
+		font-size: 10px;
+		letter-spacing: 0.24em;
+		opacity: 0.7;
+	}
+	.banner {
+		aspect-ratio: 16 / 5;
+	}
+	.banner .type {
+		padding: 4% 6%;
+	}
+	.banner .t {
+		font-size: clamp(18px, 2.4vw, 26px);
+		-webkit-line-clamp: 2;
+	}
+	@media (max-width: 600px) {
+		.banner {
+			aspect-ratio: 16 / 7;
+		}
+	}
+	.lg .t {
+		font-size: clamp(22px, 3.2vw, 34px);
+	}
+	.md .t {
+		font-size: clamp(16px, 1.9vw, 20px);
+	}
+	.sm .t {
+		font-size: 13px;
+		-webkit-line-clamp: 3;
+	}
+	.sm .en,
+	.sm .foot {
+		font-size: 8.5px;
+	}
+	.sm .type {
+		padding: 9% 10%;
+	}
+</style>

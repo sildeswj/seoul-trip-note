@@ -1,0 +1,62 @@
+---
+interface Props {
+	url: string;
+	title: string;
+}
+const { url, title } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+---
+
+<div class="share">
+	<span class="lbl">SHARE</span>
+	<a href={`https://twitter.com/intent/tweet?url=${u}&text=${t}`} target="_blank" rel="noopener" aria-label="Xでシェア">X</a>
+	<a href={`https://social-plugins.line.me/lineit/share?url=${u}`} target="_blank" rel="noopener" aria-label="LINEで送る">LINE</a>
+	<button type="button" class="copy" data-url={url}>リンクをコピー</button>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>('.share .copy').forEach((b) => {
+		b.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(b.dataset.url || location.href);
+				b.textContent = 'コピーしました';
+				setTimeout(() => (b.textContent = 'リンクをコピー'), 1600);
+			} catch {
+				/* クリップボードが使えない環境では何もしない */
+			}
+		});
+	});
+</script>
+
+<style>
+	.share {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+	.lbl {
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.22em;
+		color: var(--ink-3);
+		margin-right: 4px;
+	}
+	a,
+	button {
+		font: inherit;
+		font-size: 12.5px;
+		padding: 6px 14px;
+		border-radius: 999px;
+		border: 1px solid var(--line);
+		background: var(--surface);
+		color: var(--ink-2);
+		cursor: pointer;
+	}
+	a:hover,
+	button:hover {
+		border-color: var(--ink);
+		color: var(--ink);
+	}
+</style>

@@ -1,0 +1,78 @@
+---
+import type { MarkdownHeading } from 'astro';
+interface Props {
+	headings: MarkdownHeading[];
+}
+const all = Astro.props.headings.filter((h) => h.depth <= 4 && !/結論|要点|まとめボックス|わかること/.test(h.text));
+// 記事ごとに一番上のレベル（h2 か h3）と、その一段下までを目次にする
+const top = Math.min(...all.map((h) => h.depth));
+const withSub = all.filter((h) => h.depth <= top + 1);
+// 長すぎる目次は大見出しだけにする
+const items = withSub.length > 9 ? withSub.filter((h) => h.depth === top) : withSub;
+---
+
+{
+	items.length >= 3 && (
+		<nav class="toc" aria-label="目次">
+			<p class="toc-h">CONTENTS</p>
+			<ol>
+				{items.map((h) => (
+					<li class={h.depth > top ? 'sub' : ''}>
+						<a href={`#${h.slug}`}>{h.text.replace(/^【[^】]*】\s*/, '').replace(/^[❓✅✔️💡📌]\s*/u, '')}</a>
+					</li>
+				))}
+			</ol>
+		</nav>
+	)
+}
+
+<style>
+	.toc {
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		padding: 20px 22px;
+		font-size: 14px;
+		line-height: 1.7;
+	}
+	.toc-h {
+		margin: 0 0 10px;
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.22em;
+		color: var(--ink-3);
+	}
+	ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		counter-reset: t;
+	}
+	li {
+		padding: 5px 0;
+		border-top: 1px dashed var(--line-2);
+	}
+	li:first-child {
+		border-top: none;
+	}
+	li:not(.sub) {
+		counter-increment: t;
+	}
+	li:not(.sub) a::before {
+		content: counter(t, decimal-leading-zero);
+		font-family: var(--serif);
+		color: var(--accent);
+		margin-right: 10px;
+	}
+	li.sub {
+		padding-left: 30px;
+		font-size: 13px;
+		color: var(--ink-3);
+	}
+	a {
+		color: var(--ink-2);
+	}
+	a:hover {
+		color: var(--accent);
+	}
+</style>

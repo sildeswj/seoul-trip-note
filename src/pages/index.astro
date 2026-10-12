@@ -1,200 +1,242 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
+import Cover from '../components/Cover.astro';
 import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
+import PostCard from '../components/PostCard.astro';
+import Base from '../layouts/Base.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { CATEGORIES, categoryOf, fmtDate, getPosts, readingMinutes } from '../lib/posts';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getPosts();
+const [feature, ...rest] = posts;
+const side = rest.slice(0, 3);
+const latest = rest.slice(3, 9);
+const cats = CATEGORIES.map((c) => ({ ...c, posts: posts.filter((p) => categoryOf(p).slug === c.slug) })).filter((c) => c.posts.length);
 ---
 
-<!doctype html>
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 2em 0;
-			}
-			.hero-banner {
-				text-align: center;
-				padding: 3em 1.5em;
-				margin-bottom: 2.5em;
-				background: linear-gradient(135deg, #fff0f5 0%, #f0f7ff 100%);
-				border-radius: 16px;
-				border: 1px solid #ffd1dc;
-			}
-			.hero-tag {
-				display: inline-block;
-				background: #ff4b72;
-				color: white;
-				font-size: 0.8rem;
-				font-weight: 700;
-				padding: 0.3em 1em;
-				border-radius: 20px;
-				margin-bottom: 1em;
-				letter-spacing: 0.05em;
-			}
-			.hero-banner h1 {
-				font-size: 2.2rem;
-				color: #222;
-				margin: 0 0 0.5em 0;
-				line-height: 1.3;
-			}
-			.hero-banner p {
-				font-size: 1.05rem;
-				color: #555;
-				margin: 0;
-				line-height: 1.6;
-			}
-			.category-bar {
-				display: flex;
-				justify-content: center;
-				gap: 0.8rem;
-				flex-wrap: wrap;
-				margin-top: 1.5em;
-			}
-			.cat-chip {
-				background: white;
-				color: #444;
-				padding: 0.4em 1em;
-				border-radius: 20px;
-				font-size: 0.9rem;
-				font-weight: 600;
-				border: 1px solid #ddd;
-				text-decoration: none;
-				box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-				transition: all 0.2s;
-			}
-			.cat-chip:hover {
-				border-color: #ff4b72;
-				color: #ff4b72;
-			}
-			.section-heading {
-				font-size: 1.4rem;
-				font-weight: 700;
-				color: #333;
-				margin-bottom: 1.5rem;
-				padding-left: 0.5rem;
-				border-left: 4px solid #ff4b72;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1.5rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2rem;
-			}
-			ul li img {
-				margin-bottom: 0.75rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1.3;
-				font-size: 1.15rem;
-			}
-			.date {
-				margin: 0.4rem 0 0 0;
-				color: rgb(var(--gray));
-				font-size: 0.85rem;
-			}
-			ul li a:hover h4 {
-				color: #ff4b72;
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-				transform: translateY(-2px);
-			}
-			@media (max-width: 720px) {
-				.hero-banner {
-					padding: 2em 1em;
-				}
-				.hero-banner h1 {
-					font-size: 1.6rem;
-				}
-				ul {
-					gap: 1.5em;
-				}
-				ul li {
-					width: 100%;
-				}
-				ul li:first-child .title {
-					font-size: 1.3em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<div class="hero-banner">
-				<span class="hero-tag">2026 最新渡韓情報</span>
-				<h1>SEOUL TRIP NOTE</h1>
-				<p>ソウル在住エディターが届ける、渡韓女子のためのリアル攻略ガイド。<br />オリーブヤング最新コスメ、おすすめ美容皮膚科、聖水・漢南洞カフェ、お得な交通＆両替術。</p>
-				<div class="category-bar">
-					<span class="cat-chip">💄 オリーブヤング</span>
-					<span class="cat-chip">✨ 美容クリニック</span>
-					<span class="cat-chip">☕ 聖水・漢南洞カフェ</span>
-					<span class="cat-chip">🚇 交通・両替・SIM</span>
-				</div>
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<main class="wrap">
+		<section class="intro">
+			<p class="eyebrow">Seoul Travel & K-Beauty Notes</p>
+			<h1>渡韓前に読む、<br class="br" />ソウルの実用ノート。</h1>
+			<p class="sub">オリーブヤングの新作コスメ、免税の手続き、交通や両替のコツまで。旅の前に知っておきたいことを、わかりやすく整理しています。</p>
+		</section>
+
+		{
+			feature && (
+				<section class="top">
+					<a href={`/blog/${feature.id}/`} class="feature">
+						<Cover post={feature} size="lg" eager />
+						<div class="f-body">
+							<span class="cat-pill">{categoryOf(feature).label}</span>
+							<h2>{feature.data.title}</h2>
+							<p>{feature.data.description}</p>
+							<span class="meta">
+								{fmtDate(feature.data.pubDate)} · {readingMinutes(feature)}分で読める
+							</span>
+						</div>
+					</a>
+					<div class="side">
+						<p class="side-h">NEW ARRIVALS</p>
+						{side.map((p) => (
+							<PostCard post={p} variant="row" />
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		{
+			latest.length > 0 && (
+				<section>
+					<div class="section-head">
+						<h2>新着記事</h2>
+						<a href="/blog/" class="more">すべて見る →</a>
+					</div>
+					<div class="grid">
+						{latest.map((p) => (
+							<PostCard post={p} />
+						))}
+					</div>
+				</section>
+			)
+		}
+
+		<section>
+			<div class="section-head">
+				<h2>カテゴリから探す</h2>
 			</div>
-
-			<NewsletterSubscribe
-				title="渡韓前に知っておきたい！現地速報メルマガ 💌"
-				description="オリーブヤングのセール情報・おすすめ韓国コスメ・リアルな両替レートやカフェ情報を週1回無料でお届けします。"
-			/>
-
-			<h2 class="section-heading">最新記事一覧 (Latest Notes)</h2>
-			<section>
-				<ul>
-					{posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
+			<div class="cats">
+				{
+					CATEGORIES.map((c) => {
+						const n = posts.filter((p) => categoryOf(p).slug === c.slug).length;
+						return (
+							<a href={`/category/${c.slug}/`} class="cat" style={`--tone:${c.tone};--cink:${c.ink}`}>
+								<span class="c-en">{c.en}</span>
+								<span class="c-label">{c.label}</span>
+								<span class="c-n">{n}本の記事</span>
 							</a>
-						</li>
-					))}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+						);
+					})
+				}
+			</div>
+		</section>
+
+		{
+			posts.length >= 9 &&
+			cats.slice(0, 2).map((c) => (
+				<section>
+					<div class="section-head">
+						<h2>{c.label}</h2>
+						<a href={`/category/${c.slug}/`} class="more">もっと見る →</a>
+					</div>
+					<div class="grid">
+						{c.posts.slice(0, 3).map((p) => (
+							<PostCard post={p} />
+						))}
+					</div>
+				</section>
+			))
+		}
+
+		<div class="nl">
+			<NewsletterSubscribe />
+		</div>
+	</main>
+</Base>
+
+<style>
+	.intro {
+		text-align: center;
+		padding: 64px 0 44px;
+	}
+	.intro h1 {
+		margin-top: 14px;
+		font-size: clamp(28px, 4.6vw, 46px);
+		line-height: 1.45;
+		letter-spacing: 0.06em;
+	}
+	.sub {
+		margin: 18px auto 0;
+		max-width: 560px;
+		color: var(--ink-2);
+		font-size: 15px;
+		line-height: 1.9;
+	}
+	.br {
+		display: none;
+	}
+	.top {
+		display: grid;
+		grid-template-columns: 1.65fr 1fr;
+		gap: 44px;
+		padding-top: 8px;
+	}
+	.feature {
+		display: block;
+	}
+	.f-body {
+		padding-top: 22px;
+	}
+	.f-body h2 {
+		margin-top: 12px;
+		font-size: clamp(22px, 2.6vw, 30px);
+		line-height: 1.5;
+		transition: color 0.2s;
+	}
+	.f-body p {
+		margin: 12px 0 12px;
+		color: var(--ink-2);
+		font-size: 14.5px;
+		line-height: 1.9;
+	}
+	.feature:hover h2 {
+		color: var(--accent);
+	}
+	.side {
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+		border-left: 1px solid var(--line);
+		padding-left: 32px;
+	}
+	.side-h {
+		margin: 0;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.22em;
+		color: var(--ink-3);
+		border-bottom: 1px solid var(--ink);
+		padding-bottom: 10px;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 40px 32px;
+	}
+	.cats {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 14px;
+	}
+	.cat {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 22px 18px;
+		border-radius: var(--radius);
+		background: var(--tone);
+		color: var(--cink);
+		transition: transform 0.25s;
+	}
+	.cat:hover {
+		transform: translateY(-3px);
+	}
+	.c-en {
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 0.22em;
+	}
+	.c-label {
+		font-family: var(--serif);
+		font-weight: 700;
+		font-size: 16px;
+	}
+	.c-n {
+		font-size: 11.5px;
+		opacity: 0.8;
+	}
+	.nl {
+		margin-top: 72px;
+	}
+	@media (max-width: 960px) {
+		.top {
+			grid-template-columns: 1fr;
+			gap: 32px;
+		}
+		.side {
+			border-left: none;
+			padding-left: 0;
+		}
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		.cats {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.intro {
+			padding: 40px 0 28px;
+			text-align: left;
+		}
+		.sub {
+			margin-left: 0;
+		}
+		.br {
+			display: inline;
+		}
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

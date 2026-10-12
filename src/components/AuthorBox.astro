@@ -1,0 +1,49 @@
+<aside class="author">
+	<div class="avatar" aria-hidden="true">S</div>
+	<div>
+		<p class="name">SEOUL TRIP NOTE 編集部</p>
+		<p class="bio">韓国・ソウルを拠点にするデジタルスタジオ JWorld が運営。オリーブヤングの新作コスメから免税・交通の手続きまで、渡韓前に知りたい情報を調べて整理しています。価格・営業時間・セール日程は変わることがあるので、最新情報は各公式サイトでご確認ください。</p>
+		<a href="/about/" class="more">運営者情報を見る →</a>
+	</div>
+</aside>
+
+<style>
+	.author {
+		display: grid;
+		grid-template-columns: 56px 1fr;
+		gap: 18px;
+		padding: 24px;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+	}
+	.avatar {
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		display: grid;
+		place-items: center;
+		background: var(--ink);
+		color: #fff;
+		font-family: var(--serif);
+		font-size: 22px;
+	}
+	.name {
+		margin: 0;
+		font-family: var(--serif);
+		font-weight: 700;
+		font-size: 16px;
+	}
+	.bio {
+		margin: 6px 0 0;
+		font-size: 13.5px;
+		line-height: 1.85;
+		color: var(--ink-2);
+	}
+	.more {
+		display: inline-block;
+		margin-top: 8px;
+		font-size: 13px;
+		color: var(--accent);
+	}
+</style>

@@ -1,127 +1,100 @@
 ---
-const today = new Date();
+import { CATEGORIES } from '../lib/posts';
+const year = new Date().getFullYear();
 ---
 
-<footer>
-	<div class="footer-wrap">
-		<div class="footer-meta">
-			<p class="brand">🌸 SEOUL TRIP NOTE</p>
-			<p class="desc">渡韓女子のためのリアル韓国トレンド攻略ガイド。ソウル現地の最新コスメ、美容クリニック、カフェ、お得な旅TIPSをお届けします。</p>
-			<div class="biz-info">
-				<p>運営元：ジェイワールド (JWorld) ｜ 代表：진시우 (Siwoo Jin)</p>
-				<p>事業者登録番号：771-11-02601 ｜ 連絡先：<a href="mailto:help@jworld.dev">help@jworld.dev</a></p>
-			</div>
+<footer class="site-footer">
+	<div class="wrap grid">
+		<div class="about">
+			<p class="mark">SEOUL TRIP NOTE</p>
+			<p class="desc">ソウル旅行と韓国コスメの「本当に役立つ」情報を、日本の旅行者向けにまとめる実用メディアです。価格やセール時期などは変わることがあるため、最新情報は各公式サイトでご確認ください。</p>
 		</div>
-
-		<div class="footer-nav">
-			<div class="nav-col">
-				<strong>コンテンツ</strong>
-				<a href="/">ホーム</a>
-				<a href="/blog">記事一覧</a>
-				<a href="/about">メディア紹介 (About)</a>
-				<a href="/privacy">プライバシーポリシー</a>
-			</div>
-			<div class="nav-col">
-				<strong>JWorld サービス</strong>
-				<a href="https://jworld.dev" target="_blank" rel="noopener">JWorld Studio ↗</a>
-				<a href="https://tools.jworld.dev" target="_blank" rel="noopener">하루 계산기 (Web Tools) ↗</a>
-				<a href="https://tools.jworld.dev/bunri/" target="_blank" rel="noopener">韓国ゴミ分別ガイド ↗</a>
-			</div>
+		<div class="col">
+			<p class="h">カテゴリ</p>
+			{CATEGORIES.map((c) => <a href={`/category/${c.slug}/`}>{c.label}</a>)}
+		</div>
+		<div class="col">
+			<p class="h">サイトについて</p>
+			<a href="/about/">運営者情報</a>
+			<a href="/privacy/">プライバシーポリシー</a>
+			<a href="/blog/">記事一覧</a>
+			<a href="/rss.xml">RSS</a>
+		</div>
+		<div class="col">
+			<p class="h">JWorld</p>
+			<a href="https://jworld.dev" target="_blank" rel="noopener">JWorld Studio ↗</a>
+			<a href="https://tools.jworld.dev" target="_blank" rel="noopener">JWorld Tools ↗</a>
+			<a href="https://tools.jworld.dev/bunri/" target="_blank" rel="noopener">韓国ゴミ分別ガイド ↗</a>
 		</div>
 	</div>
-
-	<div class="footer-bottom">
-		&copy; {today.getFullYear()} SEOUL TRIP NOTE & JWorld. All rights reserved.
+	<div class="wrap biz">
+		<p>運営：ジェイワールド（JWorld）／代表：진시우（Siwoo Jin）／事業者登録番号：771-11-02601／お問い合わせ：<a href="mailto:help@jworld.dev">help@jworld.dev</a></p>
+		<p>© {year} SEOUL TRIP NOTE · JWorld</p>
 	</div>
 </footer>
 
 <style>
-	footer {
-		padding: 3.5em 1.5em 2.5em 1.5em;
-		background: #fafafa;
-		color: #555;
-		border-top: 1px solid #eaeaea;
-		margin-top: 3em;
-		font-size: 0.9rem;
+	.site-footer {
+		margin-top: 96px;
+		background: #1d1b19;
+		color: #c9c2b9;
+		font-size: 13px;
+		padding: 56px 0 28px;
 	}
-	.footer-wrap {
-		max-width: 960px;
-		margin: 0 auto;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: 2.5rem;
+	.grid {
+		display: grid;
+		grid-template-columns: 2fr 1fr 1fr 1fr;
+		gap: 40px;
 	}
-	.footer-meta {
-		flex: 1 1 360px;
+	.mark {
+		font-family: var(--serif);
+		font-size: 20px;
+		letter-spacing: 0.14em;
+		color: #fff;
+		margin: 0 0 12px;
 	}
-	.footer-meta .brand {
-		font-size: 1.15rem;
-		font-weight: 800;
-		color: #ff4b72;
-		margin: 0 0 0.5rem 0;
+	.desc {
+		margin: 0;
+		line-height: 1.9;
+		color: #a39b91;
+		max-width: 420px;
 	}
-	.footer-meta .desc {
-		line-height: 1.6;
-		margin: 0 0 1rem 0;
-		color: #666;
-		font-size: 0.88rem;
-	}
-	.biz-info {
-		font-size: 0.82rem;
-		color: #888;
-		line-height: 1.6;
-		border-top: 1px dashed #e0e0e0;
-		padding-top: 0.8rem;
-	}
-	.biz-info p {
-		margin: 0.2rem 0;
-	}
-	.biz-info a {
-		color: #ff4b72;
-		text-decoration: none;
-	}
-	.footer-nav {
-		display: flex;
-		gap: 2.5rem;
-		flex-wrap: wrap;
-	}
-	.nav-col {
+	.col {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 9px;
 	}
-	.nav-col strong {
-		color: #222;
-		font-size: 0.88rem;
-		margin-bottom: 0.4rem;
+	.h {
+		margin: 0 0 4px;
+		font-size: 11px;
+		letter-spacing: 0.18em;
+		color: #fff;
+		font-weight: 700;
 	}
-	.nav-col a {
-		color: #666;
-		text-decoration: none;
-		font-size: 0.85rem;
-		transition: color 0.2s;
+	.col a:hover,
+	.biz a:hover {
+		color: #fff;
 	}
-	.nav-col a:hover {
-		color: #ff4b72;
-		text-decoration: underline;
+	.biz {
+		margin-top: 44px;
+		padding-top: 22px;
+		border-top: 1px solid #3a3632;
+		color: #857d74;
+		font-size: 12px;
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		flex-wrap: wrap;
 	}
-	.footer-bottom {
-		max-width: 960px;
-		margin: 2.5rem auto 0 auto;
-		padding-top: 1.5rem;
-		border-top: 1px solid #eee;
-		text-align: center;
-		color: #999;
-		font-size: 0.8rem;
+	.biz p {
+		margin: 0;
 	}
-	@media (max-width: 720px) {
-		footer {
-			padding: 2.5em 1em 2em 1em;
+	@media (max-width: 860px) {
+		.grid {
+			grid-template-columns: 1fr 1fr;
 		}
-		.footer-wrap {
-			flex-direction: column;
-			gap: 1.8rem;
+		.about {
+			grid-column: 1 / -1;
 		}
 	}
 </style>

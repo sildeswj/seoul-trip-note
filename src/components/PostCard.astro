@@ -1,0 +1,81 @@
+---
+import Cover from './Cover.astro';
+import { categoryOf, fmtDate, readingMinutes, type Post } from '../lib/posts';
+
+interface Props {
+	post: Post;
+	variant?: 'card' | 'row';
+}
+const { post, variant = 'card' } = Astro.props;
+const cat = categoryOf(post);
+---
+
+<article class={`pc ${variant}`}>
+	<a href={`/blog/${post.id}/`} class="link">
+		<Cover post={post} size={variant === 'row' ? 'sm' : 'md'} />
+		<div class="body">
+			<span class="eyebrow">{cat.label}</span>
+			<h3 class="title">{post.data.title}</h3>
+			{variant === 'card' && <p class="desc">{post.data.description}</p>}
+			<p class="meta">{fmtDate(post.data.pubDate)} · {readingMinutes(post)}分で読める</p>
+		</div>
+	</a>
+</article>
+
+<style>
+	.link {
+		display: block;
+	}
+	.body {
+		padding-top: 16px;
+	}
+	.title {
+		margin: 8px 0 0;
+		font-size: 18px;
+		line-height: 1.6;
+		transition: color 0.2s;
+	}
+	.desc {
+		margin: 10px 0 0;
+		font-size: 13.5px;
+		line-height: 1.85;
+		color: var(--ink-2);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.meta {
+		margin: 10px 0 0;
+	}
+	.link:hover .title {
+		color: var(--accent);
+	}
+	.link :global(.cover) {
+		transition: transform 0.35s ease, box-shadow 0.35s ease;
+	}
+	.link:hover :global(.cover) {
+		transform: translateY(-3px);
+		box-shadow: var(--shadow);
+	}
+	.row .link {
+		display: grid;
+		grid-template-columns: 132px 1fr;
+		gap: 16px;
+		align-items: center;
+	}
+	.row .body {
+		padding: 0;
+	}
+	.row .title {
+		font-size: 15px;
+		line-height: 1.6;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.row .meta {
+		margin-top: 6px;
+	}
+</style>
