@@ -55,6 +55,7 @@ const jsonLd = {
 
 			<div class="hero">
 				<Cover post={post} size={isPlaceholder(post) ? 'banner' : 'lg'} eager />
+				{post.data.heroAi && !isPlaceholder(post) && <p class="hero-cap">※ 画像はAIで生成したイメージです。実際の商品・店舗とは異なります。</p>}
 			</div>
 
 			<div class="col">
@@ -137,6 +138,12 @@ const jsonLd = {
 	}
 	.byline {
 		margin-top: 18px;
+	}
+	.hero-cap {
+		margin: 8px 0 0;
+		font-size: 11.5px;
+		color: var(--ink-3);
+		text-align: right;
 	}
 	.hero {
 		width: min(960px, calc(100% - 40px));

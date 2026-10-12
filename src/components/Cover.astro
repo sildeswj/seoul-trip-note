@@ -17,7 +17,7 @@ const title = shortTitle(post.data.title);
 <div class={`cover ${size}`} style={`--tone:${cat.tone};--cink:${cat.ink}`}>
 	{
 		useImage ? (
-			<Image src={post.data.heroImage!} alt="" width={size === 'lg' || size === 'banner' ? 1200 : 720} height={size === 'lg' || size === 'banner' ? 675 : 405} loading={eager ? 'eager' : 'lazy'} />
+			<Image src={post.data.heroImage!} alt={eager ? post.data.heroAlt ?? post.data.title : ""} width={size === 'lg' || size === 'banner' ? 1200 : 720} height={size === 'lg' || size === 'banner' ? 675 : 405} loading={eager ? 'eager' : 'lazy'} />
 		) : (
 			<div class="type" aria-hidden="true">
 				<span class="en">{cat.en}</span>
