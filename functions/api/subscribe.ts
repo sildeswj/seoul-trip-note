@@ -1,3 +1,5 @@
+import { reportError } from "../_sentry";
+
 interface Env {
   BREVO_API_KEY?: string;
 }
@@ -30,6 +32,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const apiKey = context.env.BREVO_API_KEY;
     if (!apiKey) {
+      reportError(context, "BREVO_API_KEY is not configured", { stage: "config" });
       return new Response(
         JSON.stringify({ success: false, error: "API key is not configured on server." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" } }
@@ -69,11 +72,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       );
     }
 
+    // A 400 is usually the visitor's address; anything else is our setup or Brevo.
+    if (brevoResp.status !== 400) {
+      reportError(context, `Brevo ${brevoResp.status}: ${errData?.code || ""} ${errData?.message || ""}`, {
+        stage: "brevo",
+        status: String(brevoResp.status),
+      });
+    }
     return new Response(
       JSON.stringify({ success: false, error: errData?.message || "登録処理に失敗しました。" }),
       { status: brevoResp.status, headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" } }
     );
   } catch (err: any) {
+    reportError(context, err, { stage: "handler" });
     return new Response(
       JSON.stringify({ success: false, error: err?.message || "Internal server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" } }
