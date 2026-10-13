@@ -5,6 +5,7 @@ pubDate: "2026-10-13"
 heroImage: "../../assets/blog/korea-travel-esim-recommendation-2026.jpg"
 heroAlt: "韓国旅行eSIMおすすめ比較！無制限・電話番号付き・設定方法を解説"
 heroAi: true
+pr: true
 ---
 こんにちは、SEOUL TRIP NOTE の J です。
 
@@ -132,6 +133,7 @@ eSIMの購入から設定、そして利用時の注意点までを詳しく見�
 eSIMの設定は、主にQRコードを読み取る方法と、手動で設定情報を入力する方法の2種類があります。
 
 1.  **eSIMの購入**: 信頼できるeSIMプロバイダーのWebサイトから、希望のプランを選択して購入します。購入後、登録したメールアドレスにeSIMのプロファイル（QRコードまたは手動設定情報）が送られてきます。
+    旅行予約サイトでも購入できます。例えば<a href="https://www.klook.com/ja/activity/109354-south-korea-esim-high-speed-internet-qr-code-voucher/?aid=138920" target="_blank" rel="sponsored noopener">KlookのSKT回線の韓国eSIM</a>は、日数とデータ量を選んで購入するタイプです（対応機種と開始条件は購入ページで確認してください）。
 2.  **QRコードの読み取り（推奨）**:
     *   スマートフォンの「設定」アプリを開きます。
     *   「モバイル通信」または「SIM」の項目に進みます。

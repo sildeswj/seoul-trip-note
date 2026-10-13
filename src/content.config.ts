@@ -17,6 +17,8 @@ const blog = defineCollection({
 			heroAlt: z.string().optional(),
 			// AI生成画像なら true（記事ページにキャプションを表示）
 			heroAi: z.boolean().optional(),
+			// アフィリエイトリンクを含むなら true（記事冒頭に PR 表記。ステマ規制対応）
+			pr: z.boolean().optional(),
 			// 任意: cosme / shopping / cafe / clinic / travel（未指定ならタイトルから推定）
 			category: z.string().optional(),
 		}),
