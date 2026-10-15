@@ -1,0 +1,155 @@
+---
+interface Props {
+	category?: string;
+}
+const { category = 'travel' } = Astro.props;
+
+const items = [
+	{
+		tag: '空港アクセス',
+		title: '仁川空港鉄道 AREX 直通列車（事前予約バウチャー）',
+		desc: '仁川空港からソウル駅までノンストップ約43分。現地窓口に並ばずQRコードで乗車できます。',
+		href: 'https://www.klook.com/ja/activity/1163-airport-to-seoul-city-center-arex-train-incheon/?aid=138920',
+	},
+	{
+		tag: '通信・ネット',
+		title: '韓国 高速データ通信 eSIM（QRコード即時発行）',
+		desc: '空港でのSIM受け取り不要。日本出発前にスマホへ設定して到着直後から地図や配車アプリが使えます。',
+		href: 'https://www.klook.com/ja/activity/109354-south-korea-esim-high-speed-internet-qr-code-voucher/?aid=138920',
+	},
+	{
+		tag: '空港バス',
+		title: '仁川空港 KALリムジンバス（明洞・江南・市庁方面）',
+		desc: 'スーツケースが大きい方や、明洞・江南エリアのホテル近くまで乗り換えなしで移動したい方向け。',
+		href: 'https://www.klook.com/ja/activity/1309-kal-limousine-bus-seoul/?aid=138920',
+	},
+];
+---
+
+<aside class="prep-box" aria-label="渡韓前の定番予約チェックリスト（PR）">
+	<div class="prep-head">
+		<span class="prep-badge">PR · TRAVEL PREP</span>
+		<h3 class="prep-title">渡韓前に日本で手配しておくと安心な定番チケット</h3>
+		<p class="prep-sub">
+			空港鉄道・eSIM・リムジンバスは現地の券売機やカウンターが混雑しやすいため、出発前のオンライン手配が便利です（Klook日本語公式）。
+		</p>
+	</div>
+	<div class="prep-list">
+		{
+			items.map((item) => (
+				<a href={item.href} target="_blank" rel="sponsored noopener" class="prep-card">
+					<div class="prep-card-main">
+						<span class="prep-tag">{item.tag}</span>
+						<span class="prep-name">{item.title}</span>
+						<span class="prep-desc">{item.desc}</span>
+					</div>
+					<span class="prep-cta">Klookで確認 →</span>
+				</a>
+			))
+		}
+	</div>
+	<p class="prep-foot">
+		※ 上記リンクはアフィリエイトリンク（Klook）を含みます。料金・対象路線・引換条件は時期により変わるため、予約画面の最新情報をご確認ください。
+	</p>
+</aside>
+
+<style>
+	.prep-box {
+		padding: 24px;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+	}
+	.prep-head {
+		margin-bottom: 16px;
+	}
+	.prep-badge {
+		display: inline-block;
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		color: var(--accent);
+		border: 1px solid var(--line);
+		background: var(--bg);
+		padding: 2px 8px;
+		border-radius: 4px;
+	}
+	.prep-title {
+		margin: 8px 0 4px;
+		font-family: var(--serif);
+		font-size: 17px;
+		line-height: 1.5;
+		color: var(--ink);
+	}
+	.prep-sub {
+		margin: 0;
+		font-size: 13px;
+		line-height: 1.75;
+		color: var(--ink-2);
+	}
+	.prep-list {
+		display: grid;
+		gap: 10px;
+	}
+	.prep-card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 14px 16px;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		text-decoration: none;
+		transition: border-color 0.15s ease;
+	}
+	.prep-card:hover {
+		border-color: var(--accent);
+	}
+	.prep-card-main {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+	.prep-tag {
+		font-size: 11px;
+		font-weight: 700;
+		color: var(--accent);
+		letter-spacing: 0.04em;
+	}
+	.prep-name {
+		font-family: var(--serif);
+		font-weight: 700;
+		font-size: 14.5px;
+		color: var(--ink);
+		line-height: 1.45;
+	}
+	.prep-desc {
+		font-size: 12.5px;
+		color: var(--ink-2);
+		line-height: 1.65;
+	}
+	.prep-cta {
+		flex-shrink: 0;
+		font-size: 12.5px;
+		font-weight: 700;
+		color: var(--accent);
+		white-space: nowrap;
+	}
+	.prep-foot {
+		margin: 12px 0 0;
+		font-size: 11.5px;
+		color: var(--ink-3);
+		line-height: 1.6;
+	}
+	@media (max-width: 600px) {
+		.prep-box {
+			padding: 18px;
+		}
+		.prep-card {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 8px;
+		}
+	}
+</style>

@@ -6,6 +6,7 @@ import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
 import PostCard from '../components/PostCard.astro';
 import Share from '../components/Share.astro';
 import Toc from '../components/Toc.astro';
+import TravelPrepBox from '../components/TravelPrepBox.astro';
 import { categoryOf, fmtDate, getPosts, isPlaceholder, readingMinutes, related, type Post } from '../lib/posts';
 import Base from './Base.astro';
 
@@ -51,7 +52,7 @@ const jsonLd = {
 						{updatedDate && <> · 更新 {fmtDate(updatedDate)}</>} · {readingMinutes(post)}分で読める · 文・J（ソウル在住）
 					</span>
 				</div>
-				{post.data.pr && <p class="pr-note"><b>PR</b>この記事にはアフィリエイトリンク（Klookなど）が含まれます。リンクから予約されると運営者に紹介料が入ることがありますが、読者の料金は変わりません。</p>}
+				<p class="pr-note"><b>PR</b>この記事にはアフィリエイトリンク（Klookなど）が含まれます。リンクから予約されると運営者に紹介料が入ることがありますが、読者の料金は変わりません。</p>
 			</header>
 
 			<div class="hero">
@@ -66,6 +67,7 @@ const jsonLd = {
 				</div>
 
 				<div class="after">
+					<TravelPrepBox category={cat.slug} />
 					<Share url={url} title={title} />
 					<AuthorBox />
 					<p class="note">※ 記事内の価格・割引率・日程は執筆時点の目安です。お出かけ前に各店舗・公式サイトの最新情報をご確認ください。</p>

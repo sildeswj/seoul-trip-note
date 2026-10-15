@@ -279,6 +279,17 @@ def render_newsletter_html(data: Dict[str, Any], post: Dict[str, Any]) -> str:
             </p>
           </div>
 
+          <div style="margin-top: 24px; padding: 16px; background-color: #ffffff; border: 1px solid #f3ece6; border-radius: 8px;">
+            <div style="font-size: 11px; font-weight: bold; color: #e11d48; margin-bottom: 6px;">PR · TRAVEL PREP</div>
+            <div style="font-size: 15px; font-weight: bold; color: #111827; margin-bottom: 8px;">渡韓前に手配しておくと安心な定番チケット（Klook公式）</div>
+            <p style="margin: 0 0 8px; font-size: 13.5px; line-height: 1.75; color: #4b5563;">
+              • <a href="https://www.klook.com/ja/activity/1163-airport-to-seoul-city-center-arex-train-incheon/?aid=138920" target="_blank" style="color: #e11d48; font-weight: bold;">仁川空港鉄道 AREX 直通列車</a>（ソウル駅まで約43分・QR乗車）<br>
+              • <a href="https://www.klook.com/ja/activity/109354-south-korea-esim-high-speed-internet-qr-code-voucher/?aid=138920" target="_blank" style="color: #e11d48; font-weight: bold;">韓国 高速データ通信 eSIM</a>（カウンター受取不要・即時QR発行）<br>
+              • <a href="https://www.klook.com/ja/activity/1309-kal-limousine-bus-seoul/?aid=138920" target="_blank" style="color: #e11d48; font-weight: bold;">仁川空港 KALリムジンバス</a>（明洞・江南エリアへ直行）
+            </p>
+            <p style="margin: 0; font-size: 11px; color: #6b7280;">※ 上記はアフィリエイトリンク（PR）を含みます。最新料金・条件は予約画面でご確認ください。</p>
+          </div>
+
           <div style="margin-top: 32px; padding: 16px; background-color: #faf5f0; border-radius: 8px; text-align: center;">
             <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.6;">
               {data.get('closing_note', '次回の渡韓計画にぜひお役立てください！')}
