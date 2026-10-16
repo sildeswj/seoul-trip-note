@@ -61,3 +61,42 @@ export function related(all: Post[], post: Post, n = 3): Post[] {
 export function fmtDate(d: Date): string {
 	return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 }
+
+/** 記事末尾のFAQセクション（### 見出し または **Q1:...**）からQ&Aを抽出してJSON-LD用に返す */
+export function extractFaqs(post: Post): { question: string; answer: string }[] {
+	const body = post.body ?? '';
+	const m = body.match(/(?:^|\n)#{2,3}\s*[^\n]*(?:FAQ|よくある質問|Preguntas\s+frecuentes)[^\n]*\n([\s\S]*)/i);
+	const scope = (m ? m[1] : body).split(/\n##\s+/)[0];
+	const faqs: { question: string; answer: string }[] = [];
+	const h3Re = /(?:^|\n)###\s+([^\n]+)\n+([^\n#]+(?:\n(?!###|##|---)[^\n#]+)*)/g;
+	for (const match of scope.matchAll(h3Re)) {
+		const rawQ = match[1].trim();
+		const qClean = rawQ.replace(/^(?:Q\d*|\d+)[:.．\s]+/i, '').replace(/^\*+|\*+$/g, '').trim();
+		const aClean = match[2]
+			.trim()
+			.replace(/^(?:A\d*)[:.．\s]+/i, '')
+			.replace(/\*\*([^*]+)\*\*/g, '$1')
+			.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+			.trim();
+		if ((qClean.includes('?') || qClean.includes('？') || /^Q/i.test(rawQ)) && aClean.length > 15) {
+			faqs.push({ question: qClean, answer: aClean });
+		}
+	}
+	if (faqs.length === 0) {
+		const boldRe = /\*\*Q\d*[:.．\s]*([^\n*]+)\*\*\s*\n+(?:A\d*[:.．\s]*)?([^\n]+)/gi;
+		for (const match of scope.matchAll(boldRe)) {
+			const qClean = match[1].trim();
+			const aClean = match[2]
+				.trim()
+				.replace(/^(?:\*\*A\d*[:.．\s]*\*\*|A\d*[:.．\s]+)/i, '')
+				.replace(/\*\*([^*]+)\*\*/g, '$1')
+				.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+				.trim();
+			if (aClean.length > 15) {
+				faqs.push({ question: qClean, answer: aClean });
+			}
+		}
+	}
+	return faqs;
+}
+

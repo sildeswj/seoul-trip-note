@@ -7,7 +7,7 @@ import PostCard from '../components/PostCard.astro';
 import Share from '../components/Share.astro';
 import Toc from '../components/Toc.astro';
 import TravelPrepBox from '../components/TravelPrepBox.astro';
-import { categoryOf, fmtDate, getPosts, isPlaceholder, readingMinutes, related, type Post } from '../lib/posts';
+import { categoryOf, extractFaqs, fmtDate, getPosts, isPlaceholder, readingMinutes, related, type Post } from '../lib/posts';
 import Base from './Base.astro';
 
 interface Props {
@@ -23,17 +23,44 @@ const idx = all.findIndex((p) => p.id === post.id);
 const newer = idx > 0 ? all[idx - 1] : undefined;
 const older = idx < all.length - 1 ? all[idx + 1] : undefined;
 const url = new URL(Astro.url.pathname, Astro.site).toString();
+const faqs = extractFaqs(post);
+const imageUrl = heroImage ? new URL(heroImage.src, Astro.site).toString() : undefined;
 const jsonLd = {
 	'@context': 'https://schema.org',
-	'@type': 'BlogPosting',
-	headline: title,
-	description,
-	datePublished: pubDate.toISOString(),
-	dateModified: (updatedDate ?? pubDate).toISOString(),
-	inLanguage: 'ja',
-	mainEntityOfPage: url,
-	author: { '@type': 'Person', name: 'J', jobTitle: 'SEOUL TRIP NOTE 運営者', homeLocation: 'Seoul, Korea', url: 'https://seoul.jworld.dev/about/' },
-	publisher: { '@type': 'Organization', name: 'JWorld', url: 'https://jworld.dev' },
+	'@graph': [
+		{
+			'@type': 'BlogPosting',
+			headline: title,
+			description,
+			...(imageUrl ? { image: [imageUrl] } : {}),
+			datePublished: pubDate.toISOString(),
+			dateModified: (updatedDate ?? pubDate).toISOString(),
+			inLanguage: 'ja',
+			mainEntityOfPage: url,
+			author: { '@type': 'Person', name: 'J', jobTitle: 'SEOUL TRIP NOTE 運営者', homeLocation: 'Seoul, Korea', url: 'https://seoul.jworld.dev/about/' },
+			publisher: { '@type': 'Organization', name: 'JWorld', url: 'https://jworld.dev' },
+		},
+		{
+			'@type': 'BreadcrumbList',
+			itemListElement: [
+				{ '@type': 'ListItem', position: 1, name: 'ホーム', item: 'https://seoul.jworld.dev/' },
+				{ '@type': 'ListItem', position: 2, name: cat.label, item: `https://seoul.jworld.dev/category/${cat.slug}/` },
+				{ '@type': 'ListItem', position: 3, name: title, item: url },
+			],
+		},
+		...(faqs.length > 0
+			? [
+					{
+						'@type': 'FAQPage',
+						mainEntity: faqs.map((f) => ({
+							'@type': 'Question',
+							name: f.question,
+							acceptedAnswer: { '@type': 'Answer', text: f.answer },
+						})),
+					},
+				]
+			: []),
+	],
 };
 ---
 
