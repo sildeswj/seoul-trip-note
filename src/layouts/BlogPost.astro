@@ -62,12 +62,13 @@ const jsonLd = {
 
 			<div class="col">
 				<Toc headings={headings} />
+				<TravelPrepBox category={cat.slug} title={title} slug={post.id} variant="inline" />
 				<div class="prose">
 					<slot />
 				</div>
 
 				<div class="after">
-					<TravelPrepBox category={cat.slug} />
+					<TravelPrepBox category={cat.slug} title={title} slug={post.id} variant="full" />
 					<Share url={url} title={title} />
 					<AuthorBox />
 					<p class="note">※ 記事内の価格・割引率・日程は執筆時点の目安です。お出かけ前に各店舗・公式サイトの最新情報をご確認ください。</p>

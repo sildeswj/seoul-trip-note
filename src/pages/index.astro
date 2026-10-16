@@ -2,6 +2,7 @@
 import Cover from '../components/Cover.astro';
 import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
 import PostCard from '../components/PostCard.astro';
+import TravelPrepBox from '../components/TravelPrepBox.astro';
 import Base from '../layouts/Base.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { CATEGORIES, categoryOf, fmtDate, getPosts, readingMinutes } from '../lib/posts';
@@ -97,6 +98,8 @@ const cats = CATEGORIES.map((c) => ({ ...c, posts: posts.filter((p) => categoryO
 				</section>
 			))
 		}
+
+		<TravelPrepBox variant="home" />
 
 		<div class="nl">
 			<NewsletterSubscribe />

@@ -1,57 +1,206 @@
 ---
 interface Props {
 	category?: string;
+	title?: string;
+	slug?: string;
+	variant?: 'full' | 'inline' | 'home';
 }
-const { category = 'travel' } = Astro.props;
+const { category = 'prep', title = '', slug = '', variant = 'full' } = Astro.props;
 
-const items = [
+const KLOOK_AID = '138920';
+
+type AffiliateItem = {
+	tag: string;
+	title: string;
+	desc: string;
+	href: string;
+	cta: string;
+};
+
+const text = `${title} ${slug}`.toLowerCase();
+
+const ITEM_AREX: AffiliateItem = {
+	tag: '空港アクセス定番 #1 · Klook公式',
+	title: '仁川空港鉄道 AREX 直通列車 割引チケット',
+	desc: '仁川空港からソウル駅までノンストップ約43分。全席指定・QRコードで改札をそのまま通過できます。',
+	href: `https://www.klook.com/ja/activity/1163-airport-to-seoul-city-center-arex-train-incheon/?aid=${KLOOK_AID}`,
+	cta: '空席・割引料金を見る →',
+};
+
+const ITEM_ESIM: AffiliateItem = {
+	tag: '通信・地図アプリ必須 · Klook公式',
+	title: '韓国 高速データ通信 eSIM（即時QR発行）',
+	desc: '空港カウンターでの受取・返却不要。NAVERマップやオリヤン口コミ検索、CatchTable順番待ちにそのまま使えます。',
+	href: `https://www.klook.com/ja/activity/109354-south-korea-esim-high-speed-internet-qr-code-voucher/?aid=${KLOOK_AID}`,
+	cta: 'プラン詳細を見る →',
+};
+
+const ITEM_LIMOUSINE: AffiliateItem = {
+	tag: '重いスーツケースでも安心 · Klook公式',
+	title: '仁川空港 KALリムジンバス 割引チケット',
+	desc: '明洞・市庁・江南エリアの主要ホテル前まで乗り換えなしで直行。コスメ買い込み後の帰国便にも便利です。',
+	href: `https://www.klook.com/ja/activity/1309-kal-limousine-bus-seoul/?aid=${KLOOK_AID}`,
+	cta: '路線・料金を見る →',
+};
+
+const ITEM_SEOUL_PASS: AffiliateItem = {
+	tag: '人気スポット・体験予約 · Klook公式',
+	title: 'ソウル人気観光パス・韓服レンタル・ロッテワールド割引',
+	desc: '景福宮の韓服体験、Nソウルタワー展望台、ロッテワールドなど現地窓口よりお得に日本語予約できます。',
+	href: `https://www.klook.com/ja/city/13-seoul-things-to-do/?aid=${KLOOK_AID}`,
+	cta: 'ソウルの人気体験を見る →',
+};
+
+const ITEM_KOREA_ALL: AffiliateItem = {
+	tag: '渡韓準備まとめ · Klook公式',
+	title: '韓国旅行 交通パス・SIM・人気アクティビティ一覧',
+	desc: 'WOWPASS・T-money関連セットや空港送迎、1日ツアーなど渡韓前にスマホで手配できる定番アイテム。',
+	href: `https://www.klook.com/ja/coureg/13-south-korea-things-to-do/?aid=${KLOOK_AID}`,
+	cta: 'Klookでまとめて見る →',
+};
+
+const TOPIC_ITEMS: { match: RegExp; items: AffiliateItem[] }[] = [
 	{
-		tag: '空港アクセス',
-		title: '仁川空港鉄道 AREX 直通列車（事前予約バウチャー）',
-		desc: '仁川空港からソウル駅までノンストップ約43分。現地窓口に並ばずQRコードで乗車できます。',
-		href: 'https://www.klook.com/ja/activity/1163-airport-to-seoul-city-center-arex-train-incheon/?aid=138920',
+		match: /オリーブヤング|コスメ|スキンケア|パック|美容液|日焼け止め|olive-young|cosmetics/i,
+		items: [
+			{
+				...ITEM_ESIM,
+				tag: 'オリヤン店舗での成分・口コミ検索に · Klook公式',
+				desc: '大型店舗の地下フロアでも快適通信。Hwahae（ファヘ）やNAVERでのリアルタイム価格比較に必須の韓国eSIM。',
+			},
+			{
+				...ITEM_LIMOUSINE,
+				tag: 'コスメ爆買い後のホテル・空港移動に · Klook公式',
+				desc: 'パックや化粧水で重くなったスーツケースを預けて、明洞・江南から仁川空港まで座って直行できます。',
+			},
+		],
 	},
 	{
-		tag: '通信・ネット',
-		title: '韓国 高速データ通信 eSIM（QRコード即時発行）',
-		desc: '空港でのSIM受け取り不要。日本出発前にスマホへ設定して到着直後から地図や配車アプリが使えます。',
-		href: 'https://www.klook.com/ja/activity/109354-south-korea-esim-high-speed-internet-qr-code-voucher/?aid=138920',
+		match: /wowpass|ワウパス|両替|決済|カード|免税|タックスリファンド|t-money/i,
+		items: [
+			{
+				...ITEM_ESIM,
+				tag: 'WOWPASS残高確認・免税手続きに · Klook公式',
+				desc: '到着直後からWOWPASSアプリ認証・チャージ残高確認・モバイル免税チェックがすぐ使える高速eSIM。',
+			},
+			ITEM_AREX,
+		],
 	},
 	{
-		tag: '空港バス',
-		title: '仁川空港 KALリムジンバス（明洞・江南・市庁方面）',
-		desc: 'スーツケースが大きい方や、明洞・江南エリアのホテル近くまで乗り換えなしで移動したい方向け。',
-		href: 'https://www.klook.com/ja/activity/1309-kal-limousine-bus-seoul/?aid=138920',
+		match: /景福宮|韓服|チマチョゴリ|ロッテワールド|タワー|観光|モデルコース|gyeongbokgung|lotte/i,
+		items: [ITEM_SEOUL_PASS, ITEM_ESIM],
 	},
+	{
+		match: /広蔵市場|グルメ|カフェ|食べ歩き|焼肉|聖水|ソンス|明洞|market|food/i,
+		items: [
+			{
+				...ITEM_ESIM,
+				tag: 'NAVERマップ＆人気店ウェイティング必須 · Klook公式',
+				desc: '聖水・安国・広蔵市場の路地裏カフェ探しや、CatchTableでの順番待ち登録に欠かせない高速データeSIM。',
+			},
+			ITEM_SEOUL_PASS,
+		],
+	},
+	{
+		match: /空港|arex|リムジンバス|仁川|金浦|地下鉄|タクシー|airport/i,
+		items: [ITEM_AREX, ITEM_LIMOUSINE],
+	},
+];
+
+const matchedPair = TOPIC_ITEMS.find((entry) => entry.match.test(text))?.items ?? [ITEM_AREX, ITEM_ESIM];
+
+const thirdItem: AffiliateItem =
+	category === 'areas' || category === 'food'
+		? ITEM_SEOUL_PASS
+		: matchedPair.some((i) => i.href === ITEM_LIMOUSINE.href)
+			? ITEM_KOREA_ALL
+			: ITEM_LIMOUSINE;
+
+const fullItems: AffiliateItem[] = [...matchedPair, thirdItem];
+
+const homeItems: AffiliateItem[] = [
+	ITEM_AREX,
+	ITEM_ESIM,
+	ITEM_LIMOUSINE,
+	ITEM_SEOUL_PASS,
 ];
 ---
 
-<aside class="prep-box" aria-label="渡韓前の定番予約チェックリスト（PR）">
-	<div class="prep-head">
-		<span class="prep-badge">PR · TRAVEL PREP</span>
-		<h3 class="prep-title">渡韓前に日本で手配しておくと安心な定番チケット</h3>
-		<p class="prep-sub">
-			空港鉄道・eSIM・リムジンバスは現地の券売機やカウンターが混雑しやすいため、出発前のオンライン手配が便利です（Klook日本語公式）。
-		</p>
-	</div>
-	<div class="prep-list">
-		{
-			items.map((item) => (
-				<a href={item.href} target="_blank" rel="sponsored noopener" class="prep-card">
-					<div class="prep-card-main">
+{
+	variant === 'inline' ? (
+		<aside class="prep-box prep-inline" aria-label="この記事に関連する渡韓準備アイテム（PR）">
+			<div class="prep-inline-head">
+				<span class="prep-badge">PR · 渡韓前の定番手配</span>
+				<span class="prep-inline-note">日本語予約・即時バウチャー発行（Klook公式）</span>
+			</div>
+			<div class="prep-inline-grid">
+				{matchedPair.map((item) => (
+					<a href={item.href} target="_blank" rel="sponsored noopener" class="prep-card prep-card-compact">
+						<div class="prep-card-main">
+							<span class="prep-tag">{item.tag}</span>
+							<span class="prep-name">{item.title}</span>
+							<span class="prep-desc">{item.desc}</span>
+						</div>
+						<span class="prep-cta">{item.cta}</span>
+					</a>
+				))}
+			</div>
+			<p class="prep-foot">
+				※ 上記はアフィリエイトリンク（PR）を含みます。リンク経由で予約いただくと運営者に紹介料が入ることがありますが、読者の方の料金は変わりません。
+			</p>
+		</aside>
+	) : variant === 'home' ? (
+		<section class="prep-home" aria-label="渡韓前に手配しておくと安心な定番チケット（PR）">
+			<div class="prep-home-head">
+				<div>
+					<span class="prep-badge">TRAVEL ESSENTIALS · PR</span>
+					<h2 class="prep-home-title">渡韓前にスマホで手配できる定番アイテム</h2>
+					<p class="prep-sub">
+						仁川空港からの移動チケットや韓国eSIM、人気スポット予約など、現地で並ばずスムーズに旅を始めるための定番リストです。
+					</p>
+				</div>
+			</div>
+			<div class="prep-home-grid">
+				{homeItems.map((item) => (
+					<a href={item.href} target="_blank" rel="sponsored noopener" class="prep-home-card">
 						<span class="prep-tag">{item.tag}</span>
-						<span class="prep-name">{item.title}</span>
-						<span class="prep-desc">{item.desc}</span>
-					</div>
-					<span class="prep-cta">Klookで確認 →</span>
-				</a>
-			))
-		}
-	</div>
-	<p class="prep-foot">
-		※ 上記リンクはアフィリエイトリンク（Klook）を含みます。料金・対象路線・引換条件は時期により変わるため、予約画面の最新情報をご確認ください。
-	</p>
-</aside>
+						<h3 class="prep-name">{item.title}</h3>
+						<p class="prep-desc">{item.desc}</p>
+						<span class="prep-cta">{item.cta}</span>
+					</a>
+				))}
+			</div>
+			<p class="prep-foot">
+				※ 上記はKlook公式のアフィリエイトリンク（PR）です。最新の割引料金・利用条件は各予約ページでご確認ください。
+			</p>
+		</section>
+	) : (
+		<aside class="prep-box" aria-label="渡韓前の定番予約アイテム（PR）">
+			<div class="prep-head">
+				<span class="prep-badge">PR · TRAVEL PREP</span>
+				<h3 class="prep-title">渡韓前に手配しておくと安心な定番アイテム</h3>
+				<p class="prep-sub">
+					仁川空港からの移動や現地での通信は、日本出発前にスマホで予約しておくと現地窓口で並ばずスムーズです（Klook公式・日本語対応）。
+				</p>
+			</div>
+			<div class="prep-list">
+				{fullItems.map((item) => (
+					<a href={item.href} target="_blank" rel="sponsored noopener" class="prep-card">
+						<div class="prep-card-main">
+							<span class="prep-tag">{item.tag}</span>
+							<span class="prep-name">{item.title}</span>
+							<span class="prep-desc">{item.desc}</span>
+						</div>
+						<span class="prep-cta">{item.cta}</span>
+					</a>
+				))}
+			</div>
+			<p class="prep-foot">
+				※ 上記リンクはアフィリエイト広告（PR）を含みます。リンク経由で予約いただくと運営者に紹介料が入ることがありますが、読者の方の購入価格は変わりません。最新料金・利用条件は各予約ページでご確認ください。
+			</p>
+		</aside>
+	)
+}
 
 <style>
 	.prep-box {
@@ -59,6 +208,34 @@ const items = [
 		background: var(--surface);
 		border: 1px solid var(--line);
 		border-radius: var(--radius);
+	}
+	.prep-inline {
+		margin: 0 0 32px;
+		padding: 18px 20px;
+		background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+	}
+	.prep-inline-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		margin-bottom: 12px;
+		flex-wrap: wrap;
+	}
+	.prep-inline-note {
+		font-size: 11.5px;
+		color: var(--ink-3);
+	}
+	.prep-inline-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+	}
+	.prep-card-compact {
+		flex-direction: column;
+		align-items: flex-start !important;
+		justify-content: space-between;
+		gap: 10px !important;
 	}
 	.prep-head {
 		margin-bottom: 16px;
@@ -101,10 +278,11 @@ const items = [
 		border: 1px solid var(--line);
 		border-radius: var(--radius-sm);
 		text-decoration: none;
-		transition: border-color 0.15s ease;
+		transition: border-color 0.15s ease, transform 0.15s ease;
 	}
 	.prep-card:hover {
 		border-color: var(--accent);
+		transform: translateY(-1px);
 	}
 	.prep-card-main {
 		display: flex;
@@ -123,11 +301,13 @@ const items = [
 		font-size: 14.5px;
 		color: var(--ink);
 		line-height: 1.45;
+		margin: 0;
 	}
 	.prep-desc {
 		font-size: 12.5px;
 		color: var(--ink-2);
 		line-height: 1.65;
+		margin: 0;
 	}
 	.prep-cta {
 		flex-shrink: 0;
@@ -142,9 +322,56 @@ const items = [
 		color: var(--ink-3);
 		line-height: 1.6;
 	}
-	@media (max-width: 600px) {
-		.prep-box {
+	.prep-home {
+		margin-top: 64px;
+		padding: 28px;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+	}
+	.prep-home-head {
+		margin-bottom: 18px;
+	}
+	.prep-home-title {
+		margin: 8px 0 6px;
+		font-family: var(--serif);
+		font-size: clamp(20px, 2.5vw, 24px);
+		color: var(--ink);
+	}
+	.prep-home-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 14px;
+	}
+	.prep-home-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 16px;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		text-decoration: none;
+		transition: border-color 0.15s ease, transform 0.15s ease;
+	}
+	.prep-home-card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+	@media (max-width: 900px) {
+		.prep-home-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 640px) {
+		.prep-box,
+		.prep-home {
 			padding: 18px;
+		}
+		.prep-inline-grid,
+		.prep-home-grid {
+			grid-template-columns: 1fr;
 		}
 		.prep-card {
 			flex-direction: column;
