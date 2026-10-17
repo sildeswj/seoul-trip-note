@@ -13,8 +13,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SECRETS = r"C:\TossApps\today\collector\secrets.json"
 PROJECT = "seoul-trip-note"
 
-sec = json.load(open(SECRETS, encoding="utf-8"))
-env = {**os.environ, "CLOUDFLARE_API_TOKEN": sec["cf_token"], "CLOUDFLARE_ACCOUNT_ID": sec["cf_account_id"]}
+if os.path.exists(SECRETS):
+    sec = json.load(open(SECRETS, encoding="utf-8"))
+    env = {**os.environ, "CLOUDFLARE_API_TOKEN": sec["cf_token"], "CLOUDFLARE_ACCOUNT_ID": sec["cf_account_id"]}
+else:
+    env = dict(os.environ)  # Mac: no secrets file, use the logged-in wrangler account
 
 # 1. Build
 print("Building Astro site...")
