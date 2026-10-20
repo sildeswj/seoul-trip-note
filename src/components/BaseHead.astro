@@ -27,7 +27,7 @@ const { title, description, image = FallbackImage, type = 'website', jsonLd } = 
 <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', Astro.site)} />
 <meta name="generator" content={Astro.generator} />
 
-<Font cssVariable="--font-sans" preload />
+<Font cssVariable="--font-sans" preload={[{ subset: 'latin', weight: 400 }]} />
 <Font cssVariable="--font-serif" />
 
 <link rel="canonical" href={canonicalURL} />
