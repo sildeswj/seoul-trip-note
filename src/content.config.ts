@@ -21,6 +21,8 @@ const blog = defineCollection({
 			pr: z.boolean().optional(),
 			// 任意: cosme / shopping / cafe / clinic / travel（未指定ならタイトルから推定）
 			category: z.string().optional(),
+			// 任意: Agoda のホテル検索ボックスを出すエリア（src/lib/agoda.mjs の AREAS のキー）。CID 設定までは何も表示しない
+			agoda: z.array(z.string()).optional(),
 		}),
 });
 

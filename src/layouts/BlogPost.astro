@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from 'astro';
+import AgodaBox from '../components/AgodaBox.astro';
 import AuthorBox from '../components/AuthorBox.astro';
 import Cover from '../components/Cover.astro';
 import NewsletterSubscribe from '../components/NewsletterSubscribe.astro';
@@ -95,6 +96,7 @@ const jsonLd = {
 				</div>
 
 				<div class="after">
+					<AgodaBox areas={post.data.agoda} />
 					<TravelPrepBox category={cat.slug} title={title} slug={post.id} variant="full" />
 					<Share url={url} title={title} />
 					<AuthorBox />

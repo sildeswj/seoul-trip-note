@@ -1,0 +1,98 @@
+---
+// Hotel search box shown after posts whose frontmatter lists `agoda:` areas.
+// Renders nothing while AGODA_CID is empty (see src/lib/agoda.mjs).
+import { agodaEnabled, agodaLabel, agodaUrl } from '../lib/agoda.mjs';
+
+interface Props {
+	areas?: string[];
+}
+const { areas = [] } = Astro.props;
+const links = agodaEnabled() ? areas.map((a) => ({ label: agodaLabel(a), href: agodaUrl(a) })).filter((l) => l.href) : [];
+---
+
+{
+	links.length > 0 && (
+		<aside class="agoda-box" aria-label="エリア別ホテル検索（PR）">
+			<span class="agoda-badge">PR · HOTEL</span>
+			<h3 class="agoda-title">エリア別にホテルを探す</h3>
+			<p class="agoda-sub">日程と人数を入れて、駅からの距離・口コミ・キャンセル条件を見比べてから予約するのがおすすめです。</p>
+			<div class="agoda-list">
+				{links.map((l) => (
+					<a href={l.href} target="_blank" rel="sponsored noopener" class="agoda-card">
+						<span class="agoda-name">{l.label}のホテル</span>
+						<span class="agoda-cta">Agodaで空室を見る →</span>
+					</a>
+				))}
+			</div>
+			<p class="agoda-foot">※ アフィリエイトリンク（PR）です。リンク経由で予約いただくと運営者に紹介料が入ることがありますが、読者の方の料金は変わりません。料金・空室は予約ページでご確認ください。</p>
+		</aside>
+	)
+}
+
+<style>
+	.agoda-box {
+		padding: 22px 24px;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: var(--radius);
+	}
+	.agoda-badge {
+		display: inline-block;
+		font-size: 10.5px;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		color: var(--accent);
+		border: 1px solid var(--line);
+		background: var(--bg);
+		padding: 2px 8px;
+		border-radius: 4px;
+	}
+	.agoda-title {
+		margin: 8px 0 4px;
+		font-family: var(--serif);
+		font-size: 17px;
+		color: var(--ink);
+	}
+	.agoda-sub,
+	.agoda-foot {
+		margin: 0;
+		font-size: 13px;
+		line-height: 1.75;
+		color: var(--ink-2);
+	}
+	.agoda-foot {
+		margin-top: 12px;
+		font-size: 11.5px;
+		color: var(--ink-3);
+	}
+	.agoda-list {
+		margin-top: 14px;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		gap: 10px;
+	}
+	.agoda-card {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 14px 16px;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		border-radius: var(--radius-sm);
+		text-decoration: none;
+	}
+	.agoda-card:hover {
+		border-color: var(--accent);
+	}
+	.agoda-name {
+		font-family: var(--serif);
+		font-weight: 700;
+		font-size: 14.5px;
+		color: var(--ink);
+	}
+	.agoda-cta {
+		font-size: 12.5px;
+		font-weight: 700;
+		color: var(--accent);
+	}
+</style>

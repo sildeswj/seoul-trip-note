@@ -61,6 +61,17 @@ const ITEM_KOREA_ALL: AffiliateItem = {
 
 const TOPIC_ITEMS: { match: RegExp; items: AffiliateItem[] }[] = [
 	{
+		match: /宿泊|ホテル選び|hotel|stay/i,
+		items: [
+			{
+				...ITEM_LIMOUSINE,
+				tag: 'ホテル近くまで乗り換えなし · Klook公式',
+				desc: '明洞・市庁・江南など主要エリアのホテル周辺まで、スーツケースを預けたまま座って移動できます。',
+			},
+			ITEM_AREX,
+		],
+	},
+	{
 		match: /オリーブヤング|コスメ|スキンケア|パック|美容液|日焼け止め|olive-young|cosmetics/i,
 		items: [
 			{

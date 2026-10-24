@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { defineConfig, fontProviders } from 'astro/config';
 import remarkCjkFriendly from 'remark-cjk-friendly';
+import rehypeAgoda from './src/lib/rehype-agoda.mjs';
 import rehypeEditorial from './src/lib/rehype-editorial.mjs';
 
 // https://astro.build/config
@@ -12,7 +13,7 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		remarkPlugins: [remarkCjkFriendly],
-		rehypePlugins: [rehypeEditorial],
+		rehypePlugins: [rehypeAgoda, rehypeEditorial],
 	},
 	fonts: [
 		{
