@@ -61,3 +61,8 @@ Check out [our documentation](https://docs.astro.build) or jump into our [Discor
 ## Credit
 
 This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+## Agoda Partners (2026-10-24)
+- Account: Agoda Partners affiliate, login help@jworld.dev (owner's password), profile Siwoo Jin / JWorld, tax ID 771-11-02601. Email verified.
+- seoul.jworld.dev sent for **manual verification** on 2026-10-24 (category Travel Blog; Agoda says up to 1 week). No CID yet.
+- After approval: get the CID from Tools > Text Links (`https://www.agoda.com/partners/partnersearch.aspx?pcs=1&cid=<CID>` per the generic template, unconfirmed), add hotel links to TravelPrepBox.astro next to Klook, and add kbeauty.jworld.dev as a second site. Bank info is the owner's.
