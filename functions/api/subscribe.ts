@@ -39,7 +39,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       );
     }
 
-    // Call Brevo API: Add contact to List 3 (SEOUL TRIP NOTE Subscribers)
+    // Call Brevo API: Add contact to List 4 (SEOUL TRIP NOTE Subscribers; list 3 is K-BEAUTY NOTE since 2026-10-26)
     const brevoResp = await fetch("https://api.brevo.com/v3/contacts", {
       method: "POST",
       headers: {
@@ -50,7 +50,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       },
       body: JSON.stringify({
         email: email,
-        listIds: [3],
+        listIds: [4],
         updateEnabled: true,
       }),
     });
